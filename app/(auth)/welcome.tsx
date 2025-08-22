@@ -33,7 +33,7 @@ const Welcome = () => {
           <View style={styles.buttonContainer}>
 {/* button */}
 <Button>
-  <Typo size={22} color={colors.neutral900}>Get Started</Typo>
+  <Typo size={22} color={colors.neutral900} fontWeight={"600"}>Get Started</Typo>
 </Button>
           </View>
         </View>
