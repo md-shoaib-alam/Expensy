@@ -9,19 +9,27 @@ import Input from "@/components/input";
 import * as Icons from "phosphor-react-native";
 import Button from "@/components/Button";
 import { useRouter } from "expo-router";
+import { useAuth } from "@/contexts/authContext";
 const Login = () => {
   const emailRef = useRef("");
   const passwordRef = useRef("");
   const [isLoading, setIsLoading] = useState(false);
-  const router = useRouter()
+  const router = useRouter();
+  const { login: loginUser } = useAuth();
   const handelSubmit = async () => {
-    if(!emailRef.current || !passwordRef.current){
-        Alert.alert("Login", "Please fill all the fields")
-        return
+    if (!emailRef.current || !passwordRef.current) {
+      Alert.alert("Login", "Please fill all the fields");
+      return;
     }
-    console.log('email',emailRef.current)
-    console.log('password',passwordRef.current)
-    console.log('good to go')
+    // console.log("email", emailRef.current);
+    // console.log("password", passwordRef.current);
+    // console.log("good to go");
+    setIsLoading(true);
+    const res = await loginUser(emailRef.current, passwordRef.current);
+    setIsLoading(false);
+    if (!res.success) {
+      Alert.alert("login", res.msg);
+    }
   };
 
   return (
@@ -69,12 +77,10 @@ const Login = () => {
           />
 
           <Typo size={14} color={colors.text} style={{ alignSelf: "flex-end" }}>
-
             Forgot Password
           </Typo>
           <Button loading={isLoading} onPress={handelSubmit}>
             <Typo fontWeight={"700"} color={colors.black} size={21}>
-            
               Login
             </Typo>
           </Button>
@@ -82,10 +88,12 @@ const Login = () => {
 
         {/* footer */}
         <View style={styles.footer}>
-            <Typo size={15}>Don't have an account?</Typo>
-        <Pressable onPress={()=> router.navigate("/(auth)/register")}>
-            <Typo size={15} fontWeight={"700"} color={colors.primary}> Sign up</Typo>
-        </Pressable >
+          <Typo size={15}>Don't have an account?</Typo>
+          <Pressable onPress={() => router.navigate("/(auth)/register")}>
+            <Typo size={15} fontWeight={"700"} color={colors.primary}>
+              Sign up
+            </Typo>
+          </Pressable>
         </View>
       </View>
     </ScreenWrapper>
