@@ -19,18 +19,28 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, async (firebaseUser) => {
       if (firebaseUser) {
-        // Try to get name from Firestore if displayName is missing
-        let name = firebaseUser.displayName;
-        if (!name) {
-          const docRef = doc(firestore, "users", firebaseUser.uid);
-          const docSnap = await getDoc(docRef);
-          name = docSnap.exists() ? docSnap.data().name : null;
-        }
-        setUser({
+        // Always fetch user data from Firestore
+        const docRef = doc(firestore, "users", firebaseUser.uid);
+        const docSnap = await getDoc(docRef);
+
+        let userData: UserType = {
           uid: firebaseUser.uid,
           email: firebaseUser.email,
-          name,
-        });
+          name: firebaseUser.displayName,
+          image: null,
+        };
+
+        if (docSnap.exists()) {
+          const data = docSnap.data();
+          userData = {
+            uid: data?.uid || firebaseUser.uid,
+            email: data?.email || firebaseUser.email,
+            name: data?.name || firebaseUser.displayName,
+            image: data?.image || null,
+          };
+        }
+
+        setUser(userData);
         // @ts-ignore
         router.replace("/(tabs)");
       } else {
