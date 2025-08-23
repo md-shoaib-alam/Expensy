@@ -5,10 +5,10 @@ import {
   createUserWithEmailAndPassword,
   onAuthStateChanged,
   signInWithEmailAndPassword,
+  updateProfile,
 } from "firebase/auth";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { createContext, useContext, useEffect, useState } from "react";
-
 const AuthContext = createContext<AuthContextType | null>(null);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
@@ -17,13 +17,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const [user, setUser] = useState<UserType>(null);
   const router = useRouter();
   useEffect(() => {
-    const unsub = onAuthStateChanged(auth, (firebaseUser) => {
-      // console.log('firabse user',firebaseUser)
+    const unsub = onAuthStateChanged(auth, async (firebaseUser) => {
       if (firebaseUser) {
+        // Try to get name from Firestore if displayName is missing
+        let name = firebaseUser.displayName;
+        if (!name) {
+          const docRef = doc(firestore, "users", firebaseUser.uid);
+          const docSnap = await getDoc(docRef);
+          name = docSnap.exists() ? docSnap.data().name : null;
+        }
         setUser({
-          uid: firebaseUser?.uid,
-          email: firebaseUser?.email,
-          name: firebaseUser?.displayName,
+          uid: firebaseUser.uid,
+          email: firebaseUser.email,
+          name,
         });
         // @ts-ignore
         router.replace("/(tabs)");
@@ -57,6 +63,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         email,
         password
       );
+      await updateProfile(response.user, { displayName: name });
       await setDoc(doc(firestore, "users", response?.user?.uid), {
         name,
         email,
