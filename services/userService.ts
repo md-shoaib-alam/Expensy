@@ -15,7 +15,6 @@ export const updateUser = async (
       }
       updatedData.image = imageUploadRes.data
     }
-    // image upload pending
     const userRef = doc(firestore, "users", uid);
     await updateDoc(userRef, updatedData);
 

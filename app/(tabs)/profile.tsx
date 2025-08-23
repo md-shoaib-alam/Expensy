@@ -29,7 +29,7 @@ const Profile = () => {
     {
       title: "Settings",
       icon: <Icons.GearSixIcon size={26} color={colors.white} weight="fill" />,
-      // routeName: "/(modals)/profileModal",
+      routeName: "/(modals)/walletModal",
       bgColor: "#059669",
     },
     {
@@ -91,7 +91,7 @@ const Profile = () => {
             <Typo size={24} fontWeight={"600"} color={colors.neutral100}>
               {user?.name}
             </Typo>
-            <Typo size={15} color={colors.neutral400}>
+            <Typo size={14} color={colors.neutral300}>
               {user?.email}
             </Typo>
           </View>

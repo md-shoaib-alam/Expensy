@@ -8,6 +8,9 @@ import {
 import { colors, spacingY } from "@/constants/theme";
 import { verticalScale } from "@/utils/styling";
 import * as Icons from "phosphor-react-native"
+import Statistics from "@/app/(tabs)/statistics";
+import Wallet from "@/app/(tabs)/wallet";
+import Profile from "@/app/(tabs)/profile";
 
 export default function CustomTabs({
   state,
