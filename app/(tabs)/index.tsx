@@ -5,18 +5,19 @@ import Typo from '@/components/Typo'
 import { colors } from '@/constants/theme'
 import { signOut } from 'firebase/auth'
 import { auth } from '@/config/firebase'
+import ScreenWrapper from '@/components/ScreenWrapper'
 
 const Index = () => {
     const handleLogout =async()=>{
         await signOut(auth)
     }
   return (
-    <View>
-      <Text>Index</Text>
+    <ScreenWrapper>
+      <Typo> Home </Typo>
       <Button onPress={handleLogout}>
         <Typo color={colors.black}>logout</Typo>
       </Button>
-    </View>
+    </ScreenWrapper>
   )
 }
 
