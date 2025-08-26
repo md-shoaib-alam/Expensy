@@ -1,27 +1,57 @@
-import { StyleSheet, Text, View } from "react-native";
-import React from "react";
-import Button from "@/components/Button";
+import HomeCard from "@/components/HomeCard";
+import ScreenWrapper from "@/components/ScreenWrapper";
 import Typo from "@/components/Typo";
 import { colors, spacingX, spacingY } from "@/constants/theme";
-import { signOut } from "firebase/auth";
-import { auth } from "@/config/firebase";
-import ScreenWrapper from "@/components/ScreenWrapper";
+import { useAuth } from "@/contexts/authContext";
 import { verticalScale } from "@/utils/styling";
+import * as Icons from "phosphor-react-native";
+import React from "react";
+import { ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
 
-const Index = () => {
+const Home = () => {
+  const { user } = useAuth();
   return (
     <ScreenWrapper>
-      <Typo> Home </Typo>
+      <View style={styles.container}>
+        {/* header */}
+        <View style={styles.header}>
+          <View style={{ gap: 4 }}>
+            <Typo size={16} color={colors.neutral400}>
+              Hello,
+            </Typo>
+            <Typo size={20} fontWeight={"500"}>
+              {user?.name}
+            </Typo>
+          </View>
+
+          <TouchableOpacity style={styles.SearchIcon}>
+            <Icons.MagnifyingGlassIcon
+              size={verticalScale(20)}
+              color={colors.neutral200}
+              weight="bold"
+            />
+          </TouchableOpacity>
+        </View>
+        <ScrollView
+          contentContainerStyle={styles.scrollViewStyle}
+          showsVerticalScrollIndicator={false}
+        >
+          {/* card */}
+          <View>
+            <HomeCard/>
+          </View>
+        </ScrollView>
+      </View>
     </ScreenWrapper>
   );
 };
 
-export default Index;
+export default Home;
 
 const styles = StyleSheet.create({
-  container:{
-    flex:1,
-    paddingHorizontal:spacingX._20,
+  container: {
+    flex: 1,
+    paddingHorizontal: spacingX._20,
     marginTop: verticalScale(8),
   },
   header: {
@@ -43,7 +73,7 @@ const styles = StyleSheet.create({
     bottom: verticalScale(30),
     right: verticalScale(30),
   },
-  scrollviewStyle: {
+  scrollViewStyle: {
     marginTop: spacingY._10,
     paddingBottom: verticalScale(100),
     gap: spacingY._25,
